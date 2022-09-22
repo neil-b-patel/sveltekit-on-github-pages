@@ -1,0 +1,55 @@
+name: Deploy SvelteKit to GitHub Pages
+
+on:
+  push:
+    branches: [ gh-pages ]
+
+jobs:
+  build:
+    name: Build Stage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install and Build 🔧
+        run: |
+          npm install
+          npm run build
+
+  deploy:
+    name: Deploy Stage
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.4.0
+        with:
+          branch: gh-pages
+          folder: public
+
+  verify:
+    name: Verify Stage
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+
+    - name: Success ✅
+        if: success()
+        uses: chrnorm/deployment-status@v2.0.0
+        with:
+          state: "success"
+          token: "#{{ github.token }}"
+          description: "Deployment Succeeded"
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Failure 🚫
+        if: failure()
+        uses: chrnorm/deployment-status@v2
+        with:
+          state: "failure"
+          token: "#{{ github.token }}"
+          description: "Deployment Failed"
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+        

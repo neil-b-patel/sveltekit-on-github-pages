@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://<GITHUB_USERNAME>.github.io/<GITHUB_REPO_NAME>/sitemap.xml

@@ -1,0 +1,1 @@
+<h1>Pre-Rendered SvelteKit statically hosted on GitHub Pages</h1>
